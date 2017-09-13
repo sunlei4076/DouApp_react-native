@@ -4,8 +4,10 @@ import {
 	View,
 	Text,
 	Image,
-	InteractionManager
+	InteractionManager,
+	BackAndroid
 } from 'react-native'
+
 import TabbarPage from './TabbarPage'
 
 export default class LanuchPage extends Component {
@@ -18,6 +20,7 @@ export default class LanuchPage extends Component {
 				name:'TabbarPage',
 			})
 		},500)
+		BackAndroid.addEventListener('hardwareBackPress',this.backAndroidPress);
 	}
 	render(){
 		return (
@@ -25,6 +28,20 @@ export default class LanuchPage extends Component {
 				<Image style={{flex:1, width:'100%'}} source={require('../../src/images/LaunchImage-700-568h.png')}/>
 			</View>
 		);
+	}
+
+	componentDidUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress',this.backAndroidPress)
+	}
+	backAndroidPress=()=>{
+		const {navigator } = this.props;
+		const routes = navigator.getCurrentRoutes();
+		if (routes.length > 1) {
+			navigator.pop();
+			return true
+		}else{
+			return false
+		}
 	}
 }
 const styles = StyleSheet.create({
